@@ -1,6 +1,6 @@
 package com.details.management.controller;
 
-import com.details.management.dto.CourseDto;
+import com.details.management.dto.Course;
 import com.details.management.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/course")
+@RequestMapping("/courses")
 
 public class CourseController {
     CourseService courseService;
@@ -24,26 +24,26 @@ public class CourseController {
 
     /**
      * Method to insert Course Record
-     * @param courseDto
+     * @param course
      * @return
      **/
-    @PostMapping(value = "/insert", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public CourseDto insertCourseRecord(@RequestBody CourseDto courseDto) {
-        return courseService.insertCourseRecord(courseDto);
+    public Course insertCourseRecord(@RequestBody Course course) {
+        return courseService.insertCourseRecord(course);
     }
 
     /**
        * Method to update Course Record
        * @param courseId
-       * @param courseDto
+       * @param course
        * @return
         */
-    @PutMapping(value = "id/{courseId}", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PutMapping(value = "/{courseId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public CourseDto updateCourseRecord(@PathVariable("courseId") int courseId,
-                                          @RequestBody @Validated CourseDto courseDto) {
-        return courseService.updateCourseRecord(courseId, courseDto);
+    public Course updateCourseRecord(@PathVariable("courseId") int courseId,
+                                     @RequestBody @Validated Course course) {
+        return courseService.updateCourseRecord(courseId, course);
     }
 
     /**
@@ -70,7 +70,7 @@ public class CourseController {
      */
     @GetMapping(value = "/{courseId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getCourseRecordByStudentId(@PathVariable int courseId) {
-        Optional<CourseDto> response = courseService.getCourseRecordByCourseId(courseId);
+        Optional<Course> response = courseService.getCourseRecordByCourseId(courseId);
         if (response.isPresent()) {
             return new ResponseEntity<>(response.get(), HttpStatus.OK);
         } else {
@@ -83,10 +83,10 @@ public class CourseController {
      * Method to get All Course Records
      * @return
      */
-    @GetMapping(value = "/getAllRecords", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 
     public Object getAllCourseRecords() {
-        List<CourseDto> response = courseService.getAllCourseRecords();
+        List<Course> response = courseService.getAllCourseRecords();
         if (response.size() > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {

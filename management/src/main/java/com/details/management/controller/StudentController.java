@@ -1,7 +1,7 @@
 package com.details.management.controller;
 
-import com.details.management.dto.CourseDto;
-import com.details.management.dto.StudentDto;
+import com.details.management.dto.Course;
+import com.details.management.dto.Student;
 import com.details.management.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/studentDetails")
+@RequestMapping("/students")
 public class StudentController {
     StudentService studentService;
 
@@ -23,26 +23,26 @@ public class StudentController {
 
     /**
      * Method to insert Student Record
-     * @param studentDto
+     * @param student
      * @return
      */
-    @PostMapping(value = "/insert", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public StudentDto insertStudentRecord(@RequestBody StudentDto studentDto) {
-        return studentService.insertStudentRecord(studentDto);
+    public Student insertStudentRecord(@RequestBody Student student) {
+        return studentService.insertStudentRecord(student);
     }
 
     /**
      * Method to update Student Record
      * @param studentId
-     * @param studentDto
+     * @param student
      * @return
      */
-    @PutMapping(value = "/id/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PutMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public StudentDto updateStudentRecord(@PathVariable("studentId") int studentId,
-                                          @RequestBody @Validated StudentDto studentDto) {
-        return studentService.updateStudentRecord(studentId, studentDto);
+    public Student updateStudentRecord(@PathVariable("studentId") int studentId,
+                                       @RequestBody @Validated Student student) {
+        return studentService.updateStudentRecord(studentId, student);
     }
 
     /**
@@ -69,7 +69,7 @@ public class StudentController {
      */
     @GetMapping("/{studentId}")
     public ResponseEntity<Object> getStudentRecordByStudentId(@PathVariable int studentId) {
-        Optional<StudentDto> response = studentService.getStudentRecordByStudentId(studentId);
+        Optional<Student> response = studentService.getStudentRecordByStudentId(studentId);
         if (response.isPresent()) {
             return new ResponseEntity<>(response.get(), HttpStatus.OK);
         } else {
@@ -82,9 +82,9 @@ public class StudentController {
      * Method to get All Student Records
      * @return
      */
-    @GetMapping(value = "/getAllRecords", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getAllStudentRecords() {
-        List<StudentDto> response = studentService.getAllStudentRecords();
+        List<Student> response = studentService.getAllStudentRecords();
         if (response.size() > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -98,9 +98,9 @@ public class StudentController {
      * @param studentId
      * @return
      */
-    @GetMapping(value = "/getCourseList/{studentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{studentId}/courses", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getCourseRecordsByStudentId(@PathVariable("studentId") int studentId) {
-        List<CourseDto> response = studentService.getCourseRecordsByStudentId(studentId);
+        List<Course> response = studentService.getCourseRecordsByStudentId(studentId);
         if (response.size() > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {

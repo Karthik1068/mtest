@@ -1,7 +1,7 @@
 package com.details.management.controller;
 
-import com.details.management.dto.InstructorDto;
-import com.details.management.dto.StudentDto;
+import com.details.management.dto.Instructor;
+import com.details.management.dto.Student;
 import com.details.management.service.InstructorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/instructor")
+@RequestMapping("/instructors")
 
 public class InstructorController {
     InstructorService instructorService;
@@ -25,26 +25,26 @@ public class InstructorController {
 
     /**
      * Method to insert Instructor Record
-     * @param instructorDto
+     * @param instructor
      * @return
      **/
-    @PostMapping(value = "/insert", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public InstructorDto insertInstructorRecord(@RequestBody InstructorDto instructorDto) {
-        return instructorService.insertInstructorRecord(instructorDto);
+    public Instructor insertInstructorRecord(@RequestBody Instructor instructor) {
+        return instructorService.insertInstructorRecord(instructor);
     }
 
     /**
      * Method to update Instructor Record
      * @param instructorId
-     * @param instructorDto
+     * @param instructor
      * @return
      */
-    @PutMapping(value = "id/{instructorId}", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PutMapping(value = "/{instructorId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public InstructorDto updateInstructorRecord(@PathVariable("instructorId") int instructorId,
-                                                @RequestBody @Validated InstructorDto instructorDto) {
-        return instructorService.updateInstructorRecord(instructorId, instructorDto);
+    public Instructor updateInstructorRecord(@PathVariable("instructorId") int instructorId,
+                                             @RequestBody @Validated Instructor instructor) {
+        return instructorService.updateInstructorRecord(instructorId, instructor);
     }
 
     /**
@@ -70,7 +70,7 @@ public class InstructorController {
      **/
     @GetMapping(value = "/{instructorId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getInstructorRecordByInstructorId(@PathVariable int instructorId) {
-        Optional<InstructorDto> response = instructorService.getInstructorRecordByInstructorId(instructorId);
+        Optional<Instructor> response = instructorService.getInstructorRecordByInstructorId(instructorId);
         if (response.isPresent()) {
             return new ResponseEntity<>(response.get(), HttpStatus.OK);
         } else {
@@ -83,9 +83,9 @@ public class InstructorController {
      * Method to get All instructor Records
      * @return
      **/
-    @GetMapping(value = "/getAllRecords", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getAllInstructorRecords() {
-        List<InstructorDto> response = instructorService.getAllInstructorRecords();
+        List<Instructor> response = instructorService.getAllInstructorRecords();
         if (response.size() > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -101,9 +101,9 @@ public class InstructorController {
      * @return
      */
 
-    @GetMapping(value = "/getStudentList/{instructorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{instructorId}/students", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getStudentRecordsByInstructorId(@PathVariable("instructorId") int instructorId) {
-        List<StudentDto> response = instructorService.getStudentRecordsByInstructorId(instructorId);
+        List<Student> response = instructorService.getStudentRecordsByInstructorId(instructorId);
         if (response.size() > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {

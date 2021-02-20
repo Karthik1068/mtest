@@ -1,7 +1,7 @@
 package com.details.management.service;
 
-import com.details.management.dto.CourseDto;
-import com.details.management.dto.StudentDto;
+import com.details.management.dto.Course;
+import com.details.management.dto.Student;
 import com.details.management.repository.StudentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +21,26 @@ public class StudentService {
 
     /**
      * Method to insert Student Record
-     * @param studentDto
+     * @param student
      * @return
      **/
-    public StudentDto insertStudentRecord(StudentDto studentDto) {
-        return studentRepository.save(studentDto);
+    public Student insertStudentRecord(Student student) {
+        return studentRepository.save(student);
     }
 
     /**
      * Method to update Student Record
      * @param studentId
-     * @param studentDto
+     * @param student
      * @return
      **/
-    public StudentDto updateStudentRecord(int studentId, StudentDto studentDto) {
-        Optional<StudentDto> oldStudentDto = getStudentRecordByStudentId(studentId);
+    public Student updateStudentRecord(int studentId, Student student) {
+        Optional<Student> oldStudentDto = getStudentRecordByStudentId(studentId);
         if(oldStudentDto != null) {
-            BeanUtils.copyProperties(studentDto, oldStudentDto);
-            return studentRepository.save(studentDto);
+            BeanUtils.copyProperties(student, oldStudentDto);
+            return studentRepository.save(student);
         } else {
-            return studentRepository.save(studentDto);
+            return studentRepository.save(student);
         }
     }
 
@@ -49,7 +49,7 @@ public class StudentService {
      * @param studentId
      * @return
      **/
-    public Optional<StudentDto> getStudentRecordByStudentId(int studentId) {
+    public Optional<Student> getStudentRecordByStudentId(int studentId) {
         return studentRepository.findById(studentId);
     }
 
@@ -66,8 +66,8 @@ public class StudentService {
      * Method to get All Student Records
      * @return
      **/
-    public List<StudentDto> getAllStudentRecords() {
-        return (List<StudentDto>) studentRepository.findAll();
+    public List<Student> getAllStudentRecords() {
+        return (List<Student>) studentRepository.findAll();
     }
 
     /**
@@ -75,8 +75,8 @@ public class StudentService {
      * @param studentId
      * @return
      **/
-    public List<CourseDto> getCourseRecordsByStudentId(int studentId) {
-            return studentRepository.getCourseRecordsByStudentId(studentId);
+    public List<Course> getCourseRecordsByStudentId(int studentId) {
+            return null;
     }
 
 //    public List<CourseDto> getCourseDuration(int studentId) {

@@ -1,8 +1,8 @@
 package com.details.management.service;
 
 
-import com.details.management.dto.InstructorDto;
-import com.details.management.dto.StudentDto;
+import com.details.management.dto.Instructor;
+import com.details.management.dto.Student;
 import com.details.management.repository.InstructorRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,26 +22,26 @@ public class InstructorService {
 
     /**
      * Method to insert Instructor Record
-     * @param instructorDto
+     * @param instructor
      * @return
      **/
-    public InstructorDto insertInstructorRecord(InstructorDto instructorDto) {
-        return instructorRepository.save(instructorDto);
+    public Instructor insertInstructorRecord(Instructor instructor) {
+        return instructorRepository.save(instructor);
     }
 
     /**
      * Method to update Instructor Record
      * @param instructorId
-     * @param instructorDto
+     * @param instructor
      * @return
      **/
-    public InstructorDto updateInstructorRecord(int instructorId, InstructorDto instructorDto) {
-        Optional<InstructorDto> oldInstructorDto = getInstructorRecordByInstructorId(instructorId);
+    public Instructor updateInstructorRecord(int instructorId, Instructor instructor) {
+        Optional<Instructor> oldInstructorDto = getInstructorRecordByInstructorId(instructorId);
         if(oldInstructorDto != null) {
-            BeanUtils.copyProperties(instructorDto, oldInstructorDto);
-            return instructorRepository.save(instructorDto);
+            BeanUtils.copyProperties(instructor, oldInstructorDto);
+            return instructorRepository.save(instructor);
         } else {
-            return instructorRepository.save(instructorDto);
+            return instructorRepository.save(instructor);
         }
     }
 
@@ -50,7 +50,7 @@ public class InstructorService {
      * @param instructorId
      * @return
      **/
-    public Optional<InstructorDto> getInstructorRecordByInstructorId(int instructorId) {
+    public Optional<Instructor> getInstructorRecordByInstructorId(int instructorId) {
         return instructorRepository.findById(instructorId);
     }
 
@@ -67,8 +67,8 @@ public class InstructorService {
      * Method to get All Instructor Records
      * @return
      **/
-    public List<InstructorDto> getAllInstructorRecords() {
-        return (List<InstructorDto>) instructorRepository.findAll();
+    public List<Instructor> getAllInstructorRecords() {
+        return (List<Instructor>) instructorRepository.findAll();
     }
 
     /**
@@ -76,8 +76,8 @@ public class InstructorService {
      * @param instructorId
      * @return
      **/
-    public List<StudentDto> getStudentRecordsByInstructorId(int instructorId) {
-        return instructorRepository.getStudentRecordsByInstructorId(instructorId);
+    public List<Student> getStudentRecordsByInstructorId(int instructorId) {
+        return null;
     }
 //    public List<CourseDto> getCourseRecordsByStudentId(int studentId) {
 //        return studentRepository.getCourseRecordsByStudentId(studentId);

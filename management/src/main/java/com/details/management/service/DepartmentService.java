@@ -1,6 +1,6 @@
 package com.details.management.service;
 
-import com.details.management.dto.DepartmentDto;
+import com.details.management.dto.Department;
 import com.details.management.repository.DepartmentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +13,24 @@ import java.util.Optional;
 public class DepartmentService {
     @Autowired
     DepartmentRepository departmentRepository;
-    public DepartmentDto insertDepartmentRecord(DepartmentDto departmentDto) {
-        return departmentRepository.save(departmentDto);
+    public Department insertDepartmentRecord(Department department) {
+        return departmentRepository.save(department);
     }
 
 
     /**
      * Method to update Instructor Record
      * @param departmentId
-     * @param departmentDto
+     * @param department
      * @return
      **/
-    public DepartmentDto updateDepartmentRecord(int departmentId, DepartmentDto departmentDto) {
-        Optional<DepartmentDto> oldDepartmentDto = getDepartmentRecordByDepartmentId(departmentId);
+    public Department updateDepartmentRecord(int departmentId, Department department) {
+        Optional<Department> oldDepartmentDto = getDepartmentRecordByDepartmentId(departmentId);
         if(oldDepartmentDto != null) {
-            BeanUtils.copyProperties(departmentDto, oldDepartmentDto);
-            return departmentRepository.save(departmentDto);
+            BeanUtils.copyProperties(department, oldDepartmentDto);
+            return departmentRepository.save(department);
         } else {
-            return departmentRepository.save(departmentDto);
+            return departmentRepository.save(department);
         }
     }
 
@@ -39,7 +39,7 @@ public class DepartmentService {
      * @param departmentId
      * @return
      **/
-    public Optional<DepartmentDto> getDepartmentRecordByDepartmentId(int departmentId) {
+    public Optional<Department> getDepartmentRecordByDepartmentId(int departmentId) {
         return departmentRepository.findById(departmentId);
     }
 
@@ -56,8 +56,8 @@ public class DepartmentService {
      * Method to get All Department Records
      * @return
      **/
-    public List<DepartmentDto> getAllDepartmentRecords() {
-        return (List<DepartmentDto>) departmentRepository.findAll();
+    public List<Department> getAllDepartmentRecords() {
+        return (List<Department>) departmentRepository.findAll();
     }
 
 }
