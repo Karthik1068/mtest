@@ -1,6 +1,6 @@
 package com.details.management.service;
 
-import com.details.management.dto.CourseDto;
+import com.details.management.dto.Course;
 import com.details.management.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,26 +20,26 @@ public class CourseService {
 
     /**
      * Method to insert Course Record
-     * @param courseDto
+     * @param course
      * @return
      */
-    public CourseDto insertCourseRecord(CourseDto courseDto) {
-        return courseRepository.save(courseDto);
+    public Course insertCourseRecord(Course course) {
+        return courseRepository.save(course);
     }
 
    /**
      * Method to update Course Record
      * @param courseId
-     * @param courseDto
+     * @param course
      * @return
      **/
-    public CourseDto updateCourseRecord(int courseId, CourseDto courseDto) {
-        Optional<CourseDto> oldCourseDto = getCourseRecordByCourseId(courseId);
+    public Course updateCourseRecord(int courseId, Course course) {
+        Optional<Course> oldCourseDto = getCourseRecordByCourseId(courseId);
         if(oldCourseDto != null) {
-            BeanUtils.copyProperties(courseDto, oldCourseDto);
-            return courseRepository.save(courseDto);
+            BeanUtils.copyProperties(course, oldCourseDto);
+            return courseRepository.save(course);
         } else {
-            return courseRepository.save(courseDto);
+            return courseRepository.save(course);
         }
     }
 
@@ -48,7 +48,7 @@ public class CourseService {
      * @param courseId
      * @return
      **/
-    public Optional<CourseDto> getCourseRecordByCourseId(int courseId) {
+    public Optional<Course> getCourseRecordByCourseId(int courseId) {
         return courseRepository.findById(courseId);
     }
 
@@ -65,7 +65,7 @@ public class CourseService {
      * Method to get All Course Records
      * @return
      **/
-    public List<CourseDto> getAllCourseRecords() {
-        return (List<CourseDto>) courseRepository.findAll();
+    public List<Course> getAllCourseRecords() {
+        return (List<Course>) courseRepository.findAll();
     }
 }

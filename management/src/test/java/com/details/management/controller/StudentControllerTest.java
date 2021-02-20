@@ -1,6 +1,6 @@
 package com.details.management.controller;
 
-import com.details.management.dto.StudentDto;
+import com.details.management.dto.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,14 +35,14 @@ public class StudentControllerTest {
     @Autowired
     protected StudentController studentController;
 
-    StudentDto studentDto;
+    Student student;
     Integer studentId;
 
     @Before
     public void setUp() throws Exception {
         this.mvc = standaloneSetup(this.studentController).build();
-        studentDto = new StudentDto();
-        studentDto.setFirstName("Karthik");
+        student = new Student();
+        student.setFirstName("Karthik");
 
     }
 
@@ -56,7 +56,7 @@ public class StudentControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(studentId))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(studentDto.getFirstName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(student.getFirstName()));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].studentId").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].studentId").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].firstName").value(studentDto.getFirstName())).andReturn();
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].firstName").value(student.getFirstName())).andReturn();
 
         List<Object> objectList = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsByteArray(), List.class);
         studentId = (Integer) ((Map)objectList.get(0)).get("studentId");
@@ -83,13 +83,13 @@ public class StudentControllerTest {
         mvc.perform( MockMvcRequestBuilders
                 .post("/studentDetails/insert")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsBytes(studentDto))
+                .content(new ObjectMapper().writeValueAsBytes(student))
                 .accept(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.studentId").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.studentId").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(studentDto.getFirstName()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(student.getFirstName()));
     }
 }
