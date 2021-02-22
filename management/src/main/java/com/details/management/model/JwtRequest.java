@@ -1,4 +1,4 @@
-package com.details.management.dto;
+package com.details.management.model;
 
 import java.io.Serializable;
 

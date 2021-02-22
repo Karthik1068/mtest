@@ -1,4 +1,4 @@
-package com.details.management.dto;
+package com.details.management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.details.management.controller;
 
-import com.details.management.dto.Course;
-import com.details.management.dto.Student;
+import com.details.management.model.Course;
+import com.details.management.model.Student;
 import com.details.management.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,23 +21,12 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    /**
-     * Method to insert Student Record
-     * @param student
-     * @return
-     */
     @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Student insertStudentRecord(@RequestBody Student student) {
         return studentService.insertStudentRecord(student);
     }
 
-    /**
-     * Method to update Student Record
-     * @param studentId
-     * @param student
-     * @return
-     */
     @PutMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public Student updateStudentRecord(@PathVariable("studentId") int studentId,
@@ -45,11 +34,6 @@ public class StudentController {
         return studentService.updateStudentRecord(studentId, student);
     }
 
-    /**
-     * Method to delete Student Record By studentId
-     * @param studentId
-     * @return
-     */
     @DeleteMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> deleteStudentRecordById(@PathVariable int studentId) {
@@ -62,11 +46,6 @@ public class StudentController {
         }
     }
 
-    /**
-     * Method to get Student Record By Id
-     * @param studentId
-     * @return
-     */
     @GetMapping("/{studentId}")
     public ResponseEntity<Object> getStudentRecordByStudentId(@PathVariable int studentId) {
         Optional<Student> response = studentService.getStudentRecordByStudentId(studentId);
@@ -78,10 +57,6 @@ public class StudentController {
         }
     }
 
-    /**
-     * Method to get All Student Records
-     * @return
-     */
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getAllStudentRecords() {
         List<Student> response = studentService.getAllStudentRecords();
@@ -93,11 +68,6 @@ public class StudentController {
     }
 
 
-    /**
-     * get Course List By Student Id
-     * @param studentId
-     * @return
-     */
     @GetMapping(value = "/{studentId}/courses", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getCourseRecordsByStudentId(@PathVariable("studentId") int studentId) {
         List<Course> response = studentService.getCourseRecordsByStudentId(studentId);
@@ -107,18 +77,4 @@ public class StudentController {
             return new ResponseEntity<>("No courses available for this student: " + studentId, HttpStatus.NOT_FOUND);
         }
     }
-
-/**
- * get Course Duration List By Student Id
- **/
-//    @GetMapping(value = "/getCourseDuration/{studentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Object> getCourseDuration(@PathVariable("studentId") int studentId) {
-//        List<CourseDto> response = studentService.getCourseDuration(studentId);
-//        if (response.size() > 0) {
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("No class available today for the this student: " + studentId,
-//                    HttpStatus.NOT_FOUND);
-//        }
-//    }
 }

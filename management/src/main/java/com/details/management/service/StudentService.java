@@ -1,8 +1,8 @@
 package com.details.management.service;
 
-import com.details.management.dto.Course;
-import com.details.management.dto.Student;
-import com.details.management.repository.StudentRepository;
+import com.details.management.model.Course;
+import com.details.management.model.Student;
+import com.details.management.dao.StudentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

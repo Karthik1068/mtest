@@ -1,6 +1,6 @@
 package com.details.management.controller;
 
-import com.details.management.dto.Student;
+import com.details.management.model.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;

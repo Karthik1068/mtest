@@ -1,25 +1,26 @@
-package com.details.management.dto;
-
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+package com.details.management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
+import java.util.Date;
+
 @Data
 @Entity
-@Table(name = "student")
-public class Student {
+@Table(name = "instructor")
+public class Instructor {
 
     @Id
     @GeneratedValue
-    private long studentID;
+    private long instructorID;
+    private String headedBy;
     private String firstName;
     private String lastName;
-    private int phone;
+    private String phone;
+
     @JsonIgnore
     @CreationTimestamp
     private Date createdOn;
@@ -34,11 +35,8 @@ public class Student {
     @Transient
     private boolean activeStatus;
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "studentID"),
-            inverseJoinColumns = @JoinColumn(name = "courseID"))
-    List<Course> courses;
+    @ManyToOne
+    @JoinColumn(name = "departmentName", insertable = false, updatable = false)
+    private Department department;
+
 }

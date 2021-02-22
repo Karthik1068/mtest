@@ -1,8 +1,10 @@
 package com.details.management.service;
 
-import com.details.management.dto.Course;
-import com.details.management.repository.CourseRepository;
+import com.details.management.exception.DataResourceNotFoundException;
+import com.details.management.model.Course;
+import com.details.management.dao.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import java.util.List;
@@ -18,53 +20,26 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    /**
-     * Method to insert Course Record
-     * @param course
-     * @return
-     */
     public Course insertCourseRecord(Course course) {
         return courseRepository.save(course);
     }
 
-   /**
-     * Method to update Course Record
-     * @param courseId
-     * @param course
-     * @return
-     **/
     public Course updateCourseRecord(int courseId, Course course) {
-        Optional<Course> oldCourseDto = getCourseRecordByCourseId(courseId);
-        if(oldCourseDto != null) {
-            BeanUtils.copyProperties(course, oldCourseDto);
+            if(course.getCourseID() == 0 ) {
+                course.setCourseID(courseId);
+            }
+            BeanUtils.copyProperties(course, course);
             return courseRepository.save(course);
-        } else {
-            return courseRepository.save(course);
-        }
     }
 
-    /**
-     * Method to get Course Record By courseId
-     * @param courseId
-     * @return
-     **/
-    public Optional<Course> getCourseRecordByCourseId(int courseId) {
-        return courseRepository.findById(courseId);
+    public Course getCourseRecordByCourseId(int courseId) throws DataResourceNotFoundException {
+        return courseRepository.findById(courseId).orElseThrow(() -> new DataResourceNotFoundException("Requested course not found"));
     }
 
-    /**
-     * Method to delete Course Record By courseId
-     * @param courseId
-     * @return
-     */
     public void deleteCourseRecordById(int courseId) {
         courseRepository.deleteById(courseId);
     }
 
-    /**
-     * Method to get All Course Records
-     * @return
-     **/
     public List<Course> getAllCourseRecords() {
         return (List<Course>) courseRepository.findAll();
     }
