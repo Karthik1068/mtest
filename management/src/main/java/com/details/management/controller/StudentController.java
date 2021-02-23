@@ -60,14 +60,18 @@ public class StudentController {
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Student>> getAllStudentRecords() {
+    public ResponseEntity<List<Student>> getAllStudentRecords(@RequestParam(value = "instructorId", required = false) int instructorId) {
+        if(instructorId != 0) {
+            return new ResponseEntity<>(studentService.getAllStudentsByInstructorId(instructorId), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
+        }
     }
 
-    @GetMapping(value = "/instructor/{instructorId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Student>> getAllStudentsByInstructor(@PathVariable int instructorId) {
-        return new ResponseEntity<>(studentService.getAllStudentsByInstructorId(instructorId), HttpStatus.OK);
-    }
+//    @GetMapping(value = "/instructor/{instructorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<Student>> getAllStudentsByInstructor(@PathVariable int instructorId) {
+//        return new ResponseEntity<>(studentService.getAllStudentsByInstructorId(instructorId), HttpStatus.OK);
+//    }
 
 
     @GetMapping(value = "/{studentId}/courses", produces = MediaType.APPLICATION_JSON_VALUE)
