@@ -1,12 +1,10 @@
 package com.details.management.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.hibernate.annotations.NotFound;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class MessageResponse {
     public MessageResponse(String message) {

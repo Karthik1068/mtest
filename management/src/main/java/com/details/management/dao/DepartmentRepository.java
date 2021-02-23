@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface DepartmentRepository extends CrudRepository<Department, Integer> {
     Optional<Department> findFirstByName(String departmentName);
-    void deleteFirstByName(String departmentName);
+    void deleteByName(String departmentName);
 }

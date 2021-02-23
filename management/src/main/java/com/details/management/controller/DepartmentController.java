@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/departments")
-
+@RequestMapping("/api/v1/academy/departments")
 public class DepartmentController {
     DepartmentService departmentService;
      public DepartmentController(DepartmentService departmentService) {
@@ -32,14 +31,13 @@ public class DepartmentController {
 
     @PutMapping(value = "/{departmentName}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Department> updateDepartment(@PathVariable("departmentName") int departmentId,
+    public ResponseEntity<Department> updateDepartment(@PathVariable("departmentName") String departmentName,
                                                      @RequestBody @Validated Department department) {
         return new ResponseEntity<>(departmentService.updateDepartment(department), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{departmentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<MessageResponse> deleteDepartmentById(@PathVariable String departmentName) {
+    @DeleteMapping(value = "/{departmentName}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MessageResponse> deleteDepartmentByName(@PathVariable String departmentName) {
         departmentService.deleteDepartmentByDepartmentName(departmentName);
         return new ResponseEntity<>(new MessageResponse("Department has been deleted successfully : " + departmentName), HttpStatus.OK);
     }

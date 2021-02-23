@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +22,12 @@ public class InstructorService {
         this.instructorRepository = instructorRepository;
     }
 
+    @Transactional
     public Instructor addInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
 
+    @Transactional
     public Instructor updateInstructor(int instructorId, Instructor instructor) {
         if(instructor.getInstructorID() == 0) {
             instructor.setInstructorID(instructorId);
@@ -36,6 +39,7 @@ public class InstructorService {
         return instructorRepository.findById(instructorId).orElseThrow(() -> new DataResourceNotFoundException("Instructor not found"));
     }
 
+    @Transactional
     public void deleteInstructorRecordById(int instructorId) {
         instructorRepository.deleteById(instructorId);
     }

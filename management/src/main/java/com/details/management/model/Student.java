@@ -3,42 +3,28 @@ package com.details.management.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "student")
 public class Student {
 
     @Id
-    @GeneratedValue
-    private long studentID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int studentID;
     private String firstName;
     private String lastName;
-    private int phone;
-    @JsonIgnore
-    @CreationTimestamp
-    private Date createdOn;
-    @JsonIgnore
-    private String createdBy;
-    @JsonIgnore
-    @UpdateTimestamp
-    private Date updatedOn;
-    @JsonIgnore
-    private String updatedBy;
-    @JsonIgnore
-    @Transient
-    private boolean activeStatus;
+    private long phone;
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "studentID"),
-            inverseJoinColumns = @JoinColumn(name = "courseID"))
-    List<Course> courses;
+    Set<Course> courses;
 }
