@@ -1,7 +1,8 @@
 package com.details.management.controller;
 
-import com.details.management.dto.Course;
-import com.details.management.dto.Student;
+import com.details.management.dto.MessageResponse;
+import com.details.management.exception.DataResourceNotFoundException;
+import com.details.management.model.Student;
 import com.details.management.service.StudentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,10 +11,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/v1/academy/students")
 public class StudentController {
     StudentService studentService;
 
@@ -21,105 +21,66 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    /**
-     * Method to insert Student Record
-     * @param student
-     * @return
-     */
     @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Student insertStudentRecord(@RequestBody Student student) {
-        return studentService.insertStudentRecord(student);
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        return new ResponseEntity<>(studentService.addStudent(student), HttpStatus.OK);
     }
 
-    /**
-     * Method to update Student Record
-     * @param studentId
-     * @param student
-     * @return
-     */
     @PutMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Student updateStudentRecord(@PathVariable("studentId") int studentId,
+    public ResponseEntity<Student> updateStudent(@PathVariable("studentId") int studentId,
                                        @RequestBody @Validated Student student) {
-        return studentService.updateStudentRecord(studentId, student);
+        return new ResponseEntity<>(studentService.updateStudent(studentId, student), HttpStatus.OK);
     }
 
-    /**
-     * Method to delete Student Record By studentId
-     * @param studentId
-     * @return
-     */
-    @DeleteMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> deleteStudentRecordById(@PathVariable int studentId) {
-        if (studentId > 0) {
-            studentService.deleteStudentRecordById(studentId);
-            return new ResponseEntity<>("Record as been successfully deleted: " + studentId, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No records available for the requested id: " + studentId,
-                    HttpStatus.NOT_FOUND);
-        }
+    @PostMapping(value = "/{studentId}/courses/{courseId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MessageResponse> addCourseToStudent(@PathVariable("studentId") int studentId,
+                                                      @PathVariable("courseId") int courseId) throws Exception {
+        Student student = studentService.addCourse(studentId, courseId);
+        return new ResponseEntity<>(new MessageResponse("Course :"+courseId+" has been added to Student: "+studentId+" successfully"), HttpStatus.OK);
     }
 
-    /**
-     * Method to get Student Record By Id
-     * @param studentId
-     * @return
-     */
-    @GetMapping("/{studentId}")
-    public ResponseEntity<Object> getStudentRecordByStudentId(@PathVariable int studentId) {
-        Optional<Student> response = studentService.getStudentRecordByStudentId(studentId);
-        if (response.isPresent()) {
-            return new ResponseEntity<>(response.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No records available for the requested id: " + studentId,
-                    HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping(value = "/{studentId}/courses/{courseId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MessageResponse> removeCourseFromStudent(@PathVariable("studentId") int studentId,
+                                                              @PathVariable("courseId") int courseId) throws Exception {
+        Student student = studentService.removeCourse(studentId, courseId);
+        return new ResponseEntity<>(new MessageResponse("Course :"+courseId+" has been added to Student: "+studentId+" successfully"), HttpStatus.OK);
     }
 
-    /**
-     * Method to get All Student Records
-     * @return
-     */
+    @DeleteMapping(value = "/{studentId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MessageResponse> deleteStudent(@PathVariable int studentId) {
+            studentService.deleteStudentById(studentId);
+            return new ResponseEntity<>(new MessageResponse(studentId + " - Student removed successfully"), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{studentId}")
+    public ResponseEntity<Student> getStudentById(@PathVariable int studentId) throws Exception {
+            return new ResponseEntity<>(studentService.getStudentById(studentId), HttpStatus.OK);
+    }
+
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getAllStudentRecords() {
-        List<Student> response = studentService.getAllStudentRecords();
-        if (response.size() > 0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<List<Student>> getAllStudentRecords(@RequestParam(value = "instructorId", required = false) int instructorId) {
+        if(instructorId != 0) {
+            return new ResponseEntity<>(studentService.getAllStudentsByInstructorId(instructorId), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No records available in DB", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(studentService.getAllStudents(), HttpStatus.OK);
         }
     }
 
-
-    /**
-     * get Course List By Student Id
-     * @param studentId
-     * @return
-     */
-    @GetMapping(value = "/{studentId}/courses", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getCourseRecordsByStudentId(@PathVariable("studentId") int studentId) {
-        List<Course> response = studentService.getCourseRecordsByStudentId(studentId);
-        if (response.size() > 0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No courses available for this student: " + studentId, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    
-/**
- * get Course Duration List By Student Id
- **/
-//    @GetMapping(value = "/getCourseDuration/{studentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Object> getCourseDuration(@PathVariable("studentId") int studentId) {
-//        List<CourseDto> response = studentService.getCourseDuration(studentId);
-//        if (response.size() > 0) {
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("No class available today for the this student: " + studentId,
-//                    HttpStatus.NOT_FOUND);
-//        }
+//    @GetMapping(value = "/instructor/{instructorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<Student>> getAllStudentsByInstructor(@PathVariable int instructorId) {
+//        return new ResponseEntity<>(studentService.getAllStudentsByInstructorId(instructorId), HttpStatus.OK);
 //    }
+
+
+    @GetMapping(value = "/{studentId}/courses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getCoursesForStudent(@PathVariable("studentId") int studentId) throws DataResourceNotFoundException {
+            return new ResponseEntity<>(studentService.getCourseForStudent(studentId), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{studentId}/courses/duration", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageResponse> getTotalCourseDurationForStudent(@PathVariable("studentId") int studentId) throws DataResourceNotFoundException {
+        return new ResponseEntity<>(new MessageResponse("Total Course Duration = " + studentService.getTotalCourseDurationForStudent(studentId)), HttpStatus.OK);
+    }
 }

@@ -1,12 +1,16 @@
 package com.details.management.service;
 
-import com.details.management.dto.Course;
-import com.details.management.dto.Student;
-import com.details.management.repository.StudentRepository;
+import com.details.management.dao.CourseRepository;
+import com.details.management.exception.DataResourceNotFoundException;
+import com.details.management.model.Course;
+import com.details.management.model.Student;
+import com.details.management.dao.StudentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,71 +19,66 @@ public class StudentService {
     @Autowired
     StudentRepository studentRepository;
 
+    @Autowired
+    CourseService courseService;
+
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
-    /**
-     * Method to insert Student Record
-     * @param student
-     * @return
-     **/
-    public Student insertStudentRecord(Student student) {
+    @Transactional
+    public Student addStudent(Student student) {
         return studentRepository.save(student);
     }
 
-    /**
-     * Method to update Student Record
-     * @param studentId
-     * @param student
-     * @return
-     **/
-    public Student updateStudentRecord(int studentId, Student student) {
-        Optional<Student> oldStudentDto = getStudentRecordByStudentId(studentId);
-        if(oldStudentDto != null) {
-            BeanUtils.copyProperties(student, oldStudentDto);
-            return studentRepository.save(student);
-        } else {
-            return studentRepository.save(student);
+    @Transactional
+    public Student updateStudent(int studentId, Student student) {
+        if(student.getStudentID() == 0) {
+            student.setStudentID(studentId);
         }
+        return studentRepository.save(student);
     }
 
-    /**
-     * Method to get Student Record By studentId
-     * @param studentId
-     * @return
-     **/
-    public Optional<Student> getStudentRecordByStudentId(int studentId) {
-        return studentRepository.findById(studentId);
+    public Student getStudentById(int studentId) throws DataResourceNotFoundException {
+        return studentRepository.findById(studentId).orElseThrow(() -> new DataResourceNotFoundException("Student not found"));
     }
 
-    /**
-     * Method to delete Student Record By studentId
-     * @param studentId
-     * @return
-     */
-    public void deleteStudentRecordById(int studentId) {
+    @Transactional
+    public void deleteStudentById(int studentId) {
         studentRepository.deleteById(studentId);
     }
 
-    /**
-     * Method to get All Student Records
-     * @return
-     **/
-    public List<Student> getAllStudentRecords() {
+    public List<Student> getAllStudents() {
         return (List<Student>) studentRepository.findAll();
     }
 
-    /**
-     * Method to get Course Records By studentId
-     * @param studentId
-     * @return
-     **/
-    public List<Course> getCourseRecordsByStudentId(int studentId) {
-            return null;
+    public List<Student> getAllStudentsByInstructorId(int instructorId) {
+        return new ArrayList<>(studentRepository.findByCourses_Instructor_InstructorID(instructorId));
     }
 
-//    public List<CourseDto> getCourseDuration(int studentId) {
-//        return studentRepository.getCourseDuration(studentId);
-//    }
+    public List<Course> getCourseForStudent(int studentId) throws DataResourceNotFoundException {
+            return new ArrayList<>(getStudentById(studentId).getCourses());
+    }
+
+    public long getTotalCourseDurationForStudent(int studentId) throws DataResourceNotFoundException {
+        return  getStudentById(studentId).getCourses().stream().mapToLong(Course::getDuration).sum();
+    }
+
+    public Student addCourse(int studentId, int courseId) throws DataResourceNotFoundException {
+        Student student = getStudentById(studentId);
+        Course course = courseService.getCoursesByCourseId(courseId);
+
+        student.getCourses().add(course);
+
+        return studentRepository.save(student);
+    }
+
+    public Student removeCourse(int studentId, int courseId) throws DataResourceNotFoundException {
+        Student student = getStudentById(studentId);
+        Course course = courseService.getCoursesByCourseId(courseId);
+
+        student.getCourses().remove(course);
+
+        return studentRepository.save(student);
+    }
 }

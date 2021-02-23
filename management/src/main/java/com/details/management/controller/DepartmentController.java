@@ -1,6 +1,9 @@
 package com.details.management.controller;
 
-import com.details.management.dto.Department;
+import com.details.management.dto.MessageResponse;
+import com.details.management.exception.DataResourceNotFoundException;
+import com.details.management.model.Course;
+import com.details.management.model.Department;
 import com.details.management.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/departments")
-
+@RequestMapping("/api/v1/academy/departments")
 public class DepartmentController {
     DepartmentService departmentService;
      public DepartmentController(DepartmentService departmentService) {
@@ -21,76 +23,33 @@ public class DepartmentController {
      }
 
 
-    /**
-     * Method to insert Department Record
-     * @param department
-     * @return
-     **/
     @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Department insertDepartmentRecord(@RequestBody Department department) {
-        return departmentService.insertDepartmentRecord(department);
+    public ResponseEntity<Department> addDepartment(@RequestBody Department department) {
+        return new ResponseEntity<>(departmentService.updateDepartment(department), HttpStatus.OK);
     }
 
-
-    /**
-     * Method to update department Record
-     * @param departmentId
-     * @param department
-     * @return
-     */
-    @PutMapping(value = "/{departmentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
+    @PutMapping(value = "/{departmentName}", produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Department updateDepartmentRecord(@PathVariable("departmentId") int departmentId,
-                                             @RequestBody @Validated Department department) {
-        return departmentService.updateDepartmentRecord(departmentId, department);
+    public ResponseEntity<Department> updateDepartment(@PathVariable("departmentName") String departmentName,
+                                                     @RequestBody @Validated Department department) {
+        return new ResponseEntity<>(departmentService.updateDepartment(department), HttpStatus.OK);
     }
 
-    /**
-     * Method to delete department Record By department Id
-     * @param departmentId
-     * @return
-     */
-
-    @DeleteMapping(value = "/{departmentId}", produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> deleteDepartmentRecordById(@PathVariable int departmentId) {
-        if (departmentId > 0) {
-            departmentService.deleteDepartmentRecordById(departmentId);
-            return new ResponseEntity<>("Record as been successfully deleted: " + departmentId, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No records available for the requested id: " + departmentId,
-                    HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping(value = "/{departmentName}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MessageResponse> deleteDepartmentByName(@PathVariable String departmentName) {
+        departmentService.deleteDepartmentByDepartmentName(departmentName);
+        return new ResponseEntity<>(new MessageResponse("Department has been deleted successfully : " + departmentName), HttpStatus.OK);
     }
 
-    /**
-     * Method to get department Record By Id
-     * @param departmentId
-     * @return
-     **/
-    @GetMapping(value = "/{departmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getDepartmentRecordByDepartmentId(@PathVariable int departmentId) {
-        Optional<Department> response = departmentService.getDepartmentRecordByDepartmentId(departmentId);
-        if (response.isPresent()) {
-            return new ResponseEntity<>(response.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No records available for the requested id: " + departmentId,
-                    HttpStatus.NOT_FOUND);
-        }
+    @GetMapping(value = "/{departmentName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Department> getDepartmentsByName(@PathVariable String departmentName) throws Exception {
+        return new ResponseEntity<>(departmentService.getDepartmentByDepartmentName(departmentName), HttpStatus.OK);
     }
 
-    /**
-     * Method to get All department Records
-     * @return
-     **/
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getAllDepartmentRecords() {
-        List<Department> response = departmentService.getAllDepartmentRecords();
-        if (response.size() > 0) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("No records available in DB", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<Department>> getAllDepartments() {
+        List<Department> response = departmentService.getAllDepartments();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
