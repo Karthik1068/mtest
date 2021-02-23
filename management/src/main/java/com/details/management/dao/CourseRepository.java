@@ -1,6 +1,6 @@
-package com.details.management.repository;
+package com.details.management.dao;
 
-import com.details.management.dto.Course;
+import com.details.management.model.Course;
 import org.springframework.data.repository.CrudRepository;
 
 

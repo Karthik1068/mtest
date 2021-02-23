@@ -1,8 +1,8 @@
 package com.details.management.controller;
 
 import com.details.management.config.JwtTokenUtil;
-import com.details.management.dto.JwtRequest;
-import com.details.management.dto.JwtResponse;
+import com.details.management.model.JwtRequest;
+import com.details.management.model.JwtResponse;
 import com.details.management.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
