@@ -92,7 +92,6 @@ public class StudentController {
         }
     }
 
-
     /**
      * get Course List By Student Id
      * @param studentId
@@ -108,7 +107,7 @@ public class StudentController {
         }
     }
 
-    
+
 /**
  * get Course Duration List By Student Id
  **/
